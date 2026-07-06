@@ -160,8 +160,6 @@ for dataset_name, image_paths in image_datasets.items():
 
                 # Per-image statistics
                 image_metadata.append({
-                    "filepath": str(image_path),
-                    "filename": image_path.name,
                     "dataset": dataset_name,
                     "split": split,
                     "label": label,
@@ -171,6 +169,8 @@ for dataset_name, image_paths in image_datasets.items():
                     "pixels": width * height,
                     "mode": mode,
                     "size_bytes": image_path.stat().st_size,
+                    "filepath": str(image_path),
+                    "filename": image_path.name,
                 })
 
         except Exception:
@@ -178,8 +178,6 @@ for dataset_name, image_paths in image_datasets.items():
             corrupt_images.append(str(image_path))
 
             image_metadata.append({
-                "filepath": str(image_path),
-                "filename": image_path.name,
                 "dataset": dataset_name,
                 "split": split,
                 "label": label,
@@ -189,7 +187,9 @@ for dataset_name, image_paths in image_datasets.items():
                 "pixels": np.nan,
                 "mode": None,
                 "size_bytes": image_path.stat().st_size,
-                "corrupt": True
+                "corrupt": True,
+                "filepath": str(image_path),
+                "filename": image_path.name,
             })
 image_df = pd.DataFrame(image_metadata)
 
@@ -236,3 +236,5 @@ print(general_img_stats)
 
 print("\nPER-IMAGE DATA")
 print(image_df.head())
+
+image_df.to_csv("image_metadata.csv", index=False)
